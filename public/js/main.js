@@ -47,12 +47,20 @@ function renderDates() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const sorted = [...DATES].sort((a, b) => new Date(a.date) - new Date(b.date));
-  const firstUpcomingIndex = sorted.findIndex(d => new Date(d.date) >= today);
+  // Para fechas con día "TBA" comparamos contra el último día del mes,
+  // así se mantienen como próximas durante todo el mes en curso.
+  const compareDate = (d) => {
+    const base = new Date(d.date + 'T00:00:00');
+    if (d.day) return new Date(base.getFullYear(), base.getMonth() + 1, 0);
+    return base;
+  };
+
+  const sorted = [...DATES].sort((a, b) => compareDate(a) - compareDate(b));
+  const firstUpcomingIndex = sorted.findIndex(d => compareDate(d) >= today);
 
   list.innerHTML = sorted.map((d, i) => {
     const dateObj = new Date(d.date + 'T00:00:00');
-    const isPast = dateObj < today;
+    const isPast = compareDate(d) < today;
     const isNext = i === firstUpcomingIndex;
     const day = d.day || dateObj.getDate();
     const month = MONTHS_ES[dateObj.getMonth()];
