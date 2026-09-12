@@ -1,6 +1,7 @@
-# Unused high-res source photos (web-optimized versions are used on the site)
-assets/hero.jpg
-assets/press/press-01.jpg
-assets/press/press-02.jpg
-assets/press/press-03.jpg
-assets/press/press-04.jpg
+node_modules/
+.wrangler/
+
+# Business/sales material — not part of the client site
+scripts/CABINA-Propuesta-Comercial.pdf
+scripts/generate_cabina_kit.py
+scripts/portfolio/
