@@ -19,15 +19,17 @@ mainNav.querySelectorAll('a').forEach(link => {
 });
 
 // Fechas / agenda
-// Agregá una fecha por entrada. "date" en formato YYYY-MM-DD.
+// Agregá una fecha por entrada. "date" en formato YYYY-MM-DD (si el día
+// todavía no está confirmado, usá el 01 del mes y agregá day: 'TBA').
 // "url" es opcional (link a entradas, evento de Instagram, etc).
 const DATES = [
   { date: '2026-03-21', event: 'Warmup Fernando Ferreyra', venue: 'Rosario, Argentina' },
   { date: '2026-06-13', event: 'Warmup Agustín Ficarra', venue: 'Rosario, Argentina' },
   { date: '2026-07-30', event: 'Open to clase FEUR', venue: 'Rosario, Argentina' },
   { date: '2026-09-04', event: 'Closing Fashion Sunset', venue: 'Rosario, Argentina' },
-  // Próximas fechas — agregar acá cuando estén confirmadas:
-  // { date: '2026-12-05', event: 'Nombre del evento', venue: 'Lugar, Ciudad', url: 'https://...' },
+  { date: '2026-09-26', event: 'Open a Marcelo Vasami', venue: 'Rosario, Argentina' },
+  { date: '2026-10-01', day: 'TBA', event: 'Sunset', venue: 'A confirmar' },
+  { date: '2026-11-01', day: 'TBA', event: 'Victoria', venue: 'A confirmar' },
 ];
 
 const MONTHS_ES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
@@ -52,7 +54,7 @@ function renderDates() {
     const dateObj = new Date(d.date + 'T00:00:00');
     const isPast = dateObj < today;
     const isNext = i === firstUpcomingIndex;
-    const day = dateObj.getDate();
+    const day = d.day || dateObj.getDate();
     const month = MONTHS_ES[dateObj.getMonth()];
 
     const inner = `
