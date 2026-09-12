@@ -18,6 +18,61 @@ mainNav.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => mainNav.classList.remove('open'));
 });
 
+// Fechas / agenda
+// Agregá una fecha por entrada. "date" en formato YYYY-MM-DD.
+// "url" es opcional (link a entradas, evento de Instagram, etc).
+const DATES = [
+  { date: '2026-03-21', event: 'Warmup Fernando Ferreyra', venue: 'Rosario, Argentina' },
+  { date: '2026-06-13', event: 'Warmup Agustín Ficarra', venue: 'Rosario, Argentina' },
+  { date: '2026-07-30', event: 'Open to clase FEUR', venue: 'Rosario, Argentina' },
+  { date: '2026-09-04', event: 'Closing Fashion Sunset', venue: 'Rosario, Argentina' },
+  // Próximas fechas — agregar acá cuando estén confirmadas:
+  // { date: '2026-12-05', event: 'Nombre del evento', venue: 'Lugar, Ciudad', url: 'https://...' },
+];
+
+const MONTHS_ES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+
+function renderDates() {
+  const list = document.getElementById('datesList');
+  const empty = document.getElementById('datesEmpty');
+  if (!list) return;
+
+  if (DATES.length === 0) {
+    empty.hidden = false;
+    return;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const sorted = [...DATES].sort((a, b) => new Date(a.date) - new Date(b.date));
+  const firstUpcomingIndex = sorted.findIndex(d => new Date(d.date) >= today);
+
+  list.innerHTML = sorted.map((d, i) => {
+    const dateObj = new Date(d.date + 'T00:00:00');
+    const isPast = dateObj < today;
+    const isNext = i === firstUpcomingIndex;
+    const day = dateObj.getDate();
+    const month = MONTHS_ES[dateObj.getMonth()];
+
+    const inner = `
+      <span class="date-date">${day} ${month}</span>
+      <span class="date-info">
+        <span class="date-event">${d.event}</span>
+        <span class="date-venue">${d.venue}</span>
+      </span>
+      ${isNext ? '<span class="date-badge">Próxima fecha</span>' : ''}
+    `;
+
+    const classes = ['date-item', isPast ? 'is-past' : '', isNext ? 'is-next' : ''].filter(Boolean).join(' ');
+
+    return d.url
+      ? `<li class="${classes}"><a href="${d.url}" target="_blank" rel="noopener">${inner}</a></li>`
+      : `<li class="${classes}">${inner}</li>`;
+  }).join('');
+}
+renderDates();
+
 // YouTube facade: load iframe on click
 document.querySelectorAll('.video-card').forEach(card => {
   const thumb = card.querySelector('.video-thumb');
