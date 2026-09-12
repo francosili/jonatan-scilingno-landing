@@ -286,6 +286,24 @@ h2 {
 /* Fechas */
 .fechas { background: var(--bg-alt); border-top: 1px solid var(--line); }
 
+.dates-group + .dates-group {
+  margin-top: 46px;
+}
+
+.dates-subheading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  margin-bottom: 6px;
+}
+
+.dates-subheading--muted {
+  color: var(--muted);
+}
+
 .dates-list {
   list-style: none;
   border-top: 1px solid var(--line);

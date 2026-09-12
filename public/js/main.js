@@ -34,10 +34,34 @@ const DATES = [
 
 const MONTHS_ES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
 
+function renderDateItem(d, isPast, isNext) {
+  const dateObj = new Date(d.date + 'T00:00:00');
+  const day = d.day || dateObj.getDate();
+  const month = MONTHS_ES[dateObj.getMonth()];
+
+  const inner = `
+    <span class="date-date">${day} ${month}</span>
+    <span class="date-info">
+      <span class="date-event">${d.event}</span>
+      <span class="date-venue">${d.venue}</span>
+    </span>
+    ${isNext ? '<span class="date-badge">Próxima fecha</span>' : ''}
+  `;
+
+  const classes = ['date-item', isPast ? 'is-past' : '', isNext ? 'is-next' : ''].filter(Boolean).join(' ');
+
+  return d.url
+    ? `<li class="${classes}"><a href="${d.url}" target="_blank" rel="noopener">${inner}</a></li>`
+    : `<li class="${classes}">${inner}</li>`;
+}
+
 function renderDates() {
-  const list = document.getElementById('datesList');
+  const upcomingGroup = document.getElementById('datesUpcomingGroup');
+  const upcomingList = document.getElementById('datesUpcomingList');
+  const pastGroup = document.getElementById('datesPastGroup');
+  const pastList = document.getElementById('datesPastList');
   const empty = document.getElementById('datesEmpty');
-  if (!list) return;
+  if (!upcomingList || !pastList) return;
 
   if (DATES.length === 0) {
     empty.hidden = false;
@@ -55,31 +79,20 @@ function renderDates() {
     return base;
   };
 
-  const sorted = [...DATES].sort((a, b) => compareDate(a) - compareDate(b));
-  const firstUpcomingIndex = sorted.findIndex(d => compareDate(d) >= today);
+  const upcoming = DATES.filter(d => compareDate(d) >= today).sort((a, b) => compareDate(a) - compareDate(b));
+  const past = DATES.filter(d => compareDate(d) < today).sort((a, b) => compareDate(b) - compareDate(a));
 
-  list.innerHTML = sorted.map((d, i) => {
-    const dateObj = new Date(d.date + 'T00:00:00');
-    const isPast = compareDate(d) < today;
-    const isNext = i === firstUpcomingIndex;
-    const day = d.day || dateObj.getDate();
-    const month = MONTHS_ES[dateObj.getMonth()];
+  if (upcoming.length > 0) {
+    upcomingGroup.hidden = false;
+    upcomingList.innerHTML = upcoming.map((d, i) => renderDateItem(d, false, i === 0)).join('');
+  } else {
+    empty.hidden = false;
+  }
 
-    const inner = `
-      <span class="date-date">${day} ${month}</span>
-      <span class="date-info">
-        <span class="date-event">${d.event}</span>
-        <span class="date-venue">${d.venue}</span>
-      </span>
-      ${isNext ? '<span class="date-badge">Próxima fecha</span>' : ''}
-    `;
-
-    const classes = ['date-item', isPast ? 'is-past' : '', isNext ? 'is-next' : ''].filter(Boolean).join(' ');
-
-    return d.url
-      ? `<li class="${classes}"><a href="${d.url}" target="_blank" rel="noopener">${inner}</a></li>`
-      : `<li class="${classes}">${inner}</li>`;
-  }).join('');
+  if (past.length > 0) {
+    pastGroup.hidden = false;
+    pastList.innerHTML = past.map(d => renderDateItem(d, true, false)).join('');
+  }
 }
 renderDates();
 

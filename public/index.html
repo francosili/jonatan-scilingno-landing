@@ -93,7 +93,16 @@
     <span class="eyebrow">Fechas</span>
     <h2 class="section-title">Agenda</h2>
 
-    <ul class="dates-list" id="datesList"></ul>
+    <div class="dates-group" id="datesUpcomingGroup" hidden>
+      <h3 class="dates-subheading">Próximas fechas</h3>
+      <ul class="dates-list" id="datesUpcomingList"></ul>
+    </div>
+
+    <div class="dates-group" id="datesPastGroup" hidden>
+      <h3 class="dates-subheading dates-subheading--muted">Fechas anteriores</h3>
+      <ul class="dates-list" id="datesPastList"></ul>
+    </div>
+
     <p class="dates-empty" id="datesEmpty" hidden>
       Próximas fechas a confirmar — seguí
       <a href="https://www.instagram.com/jonatan.es" target="_blank" rel="noopener">@jonatan.es</a>
